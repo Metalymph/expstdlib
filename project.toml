@@ -1,0 +1,15 @@
+[[executable]]
+# name of the target
+name = "expstdlib"
+# version using semantic versioning
+version = "0.1.0"
+# authors, optionally with email
+authors = ["John Doe <john.doe@example.com>"]
+# language version of C3
+langrev = "1"
+# warnings used
+warnings = ["no-unused"]
+# sources compiled
+sources = ["src/**"]
+# libraries to use
+libs = ["lib/**"]
