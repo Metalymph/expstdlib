@@ -87,9 +87,9 @@ fn char* toLower(char* s) {
     }
 }*/
 
-/*fn char* substring(char* s, int start_index, int end_index) {
+/*fn char* slice(char* s, int start_index, int end_index) {
     uint slen = len(s);
-    char[slen] subs;
+    char[end_index - start_index] subs;
 
     for (int i = start_index; i <= end_index; i++) {
         ch

@@ -78,8 +78,8 @@ fn char* Time.toStr(Time* t) {
 }
 
 struct TimeZone {
+    inline Time time;
     char sign;
-    Time time;
 }
 
 struct DateTime {

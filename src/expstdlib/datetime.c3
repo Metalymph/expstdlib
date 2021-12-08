@@ -4,10 +4,10 @@ import strings;
 import std::io;
 import libc;
 
-private fn ushort! atoi(char ch) {
+fn ushort! atoi(char ch) {
     ushort ch_val = (ushort)(ch);
     if (ch_val > 47 && ch_val < 58) {
-        return ch_val - 47;
+        return ch_val - 48;
     }
     return ParseNumError.NOT_A_NUM!;
 }
@@ -46,6 +46,11 @@ private fn char! verifyChar(char ch, CharType ctype, ushort pos) {
                 return ch;
             }
             nextcase MINUS;
+        case COLON:
+            if (ch == ':') {
+                return ch;
+            }
+            err_message = "\':\'";
     }
     io::printf("Error: char \'%c\' found, expected %s instead at index %hd\n", ch, err_message, pos);
     return DateTimeError.UNEXPECTED_CHAR!; 
@@ -56,7 +61,7 @@ private fn Date! parseDate(char* date_str) {
     char ch;
     ushort ch_val;
 
-    for (ushort i = 0; i < strings::len(date_str); i++) {
+    for (ushort i = 0; i < 10; i++) {
         ch = date_str[i];
 
         switch(i) {
@@ -166,7 +171,7 @@ private fn Time! parseTime(char* time_str) {
     char ch;
     ushort ch_val;
 
-    for (ushort i = 0; i < strings::len(time_str); i++) {
+    for (ushort i = 0; i < 8; i++) {
         ch = time_str[i];
 
         switch(i) {
@@ -236,7 +241,7 @@ fn DateTime! parseDateTime(char* datetime_str) {
             io::printf("Error: string given has not the lenght of 28 chars.");
             return DateTimeError.STR_LEN_MISMATCH!; 
         }
-
+        io::printf("%s", datetime_str[21..27]);
         datetime.time_zone.time = parseTime(datetime_str[21..27])?;
     } else {
         //Default UTC TimeZone is used
@@ -244,10 +249,10 @@ fn DateTime! parseDateTime(char* datetime_str) {
         datetime.time_zone.time = Time { 0, 0, 0 };
     }
 
-    datetime.date = parseDate(datetime_str[0..9])?;
-    io::println("date parsed");
+    datetime.date = parseDate(datetime_str)?;
+    //io::println("Given date correctly parsed");
     datetime.time = parseTime(datetime_str[11..18])?;
-    io::println("time parsed");
+    //io::println("Given time correctly parsed");
 
     return datetime;
 }
