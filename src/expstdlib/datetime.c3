@@ -30,22 +30,17 @@ private fn char! verifyChar(char ch, CharType ctype, ushort pos) {
             if (ch == '-') {
                 return ch;
             }
-            err_message = (pos < 8) ? "'-\'" : "\'-\' or \'+\'";
+            err_message = "\'-\'";
         case TIME:
             if (ch == 'T') {
                 return ch;
             }
             err_message = "\'T\'";
-        case ZULU:
-            if (ch == 'Z') {
+        case TIME_ZONE_SIGN:
+            if ((ch == 'Z') || (ch == '-') || (ch == '+')) {
                 return ch;
             }
-            err_message = "\'Z\'";
-        case PLUS:
-            if (ch == '+') {
-                return ch;
-            }
-            nextcase MINUS;
+            err_message = (pos < 8) ? "'-\'" : "\'Z\' or \'-\' or \'+\'";
         case COLON:
             if (ch == ':') {
                 return ch;
@@ -234,19 +229,20 @@ fn DateTime! parseDateTime(char* datetime_str) {
     verifyChar(datetime_str[10], CharType.TIME, 10)?;
     
     DateTime datetime;
-    if (catch verifyChar(datetime_str[19], CharType.ZULU, 19)) {
-        datetime.time_zone.sign = verifyChar(datetime_str[19], CharType.PLUS, 19)?;
+    datetime.time_zone.sign = verifyChar(datetime_str[19], CharType.TIME_ZONE_SIGN, 19)?;
 
-        if (strlen != 28) {
-            io::printf("Error: string given has not the lenght of 28 chars.");
-            return DateTimeError.STR_LEN_MISMATCH!; 
-        }
-        io::printf("%s", datetime_str[21..27]);
-        datetime.time_zone.time = parseTime(datetime_str[21..27])?;
-    } else {
-        //Default UTC TimeZone is used
-        datetime.time_zone.sign = 'Z';
-        datetime.time_zone.time = Time { 0, 0, 0 };
+    switch (datetime.time_zone.sign) {
+        case 'Z':
+            //Default UTC TimeZone is used
+            datetime.time_zone.time = Time { 0, 0, 0 };
+        case '+':
+            if (strlen != 28) {
+                io::printf("Error: string given has not the lenght of 28 chars.");
+                return DateTimeError.STR_LEN_MISMATCH!; 
+            }
+            datetime.time_zone.time = parseTime(datetime_str[20..27])?;
+        case '-':
+            nextcase '+';
     }
 
     datetime.date = parseDate(datetime_str)?;

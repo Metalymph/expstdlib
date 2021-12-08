@@ -31,9 +31,8 @@ enum CharType {
     NO_ZERO_NUM,
     NUM,
     MINUS,
-    PLUS,
     TIME,
-    ZULU,
+    TIME_ZONE_SIGN,
     COLON
 }
 

@@ -6,7 +6,6 @@ import datetime;
 
 fn void test_dt(char* dt_ex) {
     DateTime! dt = datetime::parseDateTime(dt_ex);
-    io::printf("test_1 datetime::parseDateTime(char*) of %s is: ", dt_ex);
     if (catch err = dt) {
         case ParseNumError.NOT_A_NUM:
             io::println("ERR: Not a num");
@@ -41,12 +40,19 @@ fn int main(int argc, char** argv)
     //io::printf("%s\n", (strings::len(dt_ex_1) == 20) ? "OK" : "ERR");
 
     //TEST datetime::parseDateTime()
-    test_dt(dt_ex_1);
+    io::printf("test_1 datetime::parseDateTime(char*) of %s is: ", dt_ex_1);
+    test_dt(dt_ex_1); //OK
+
     char* dt_ex_2 = "2021-08-32T12:45:01Z"; //32 of august CHAR_ERROR
+    io::printf("test_2 datetime::parseDateTime(char*) of %s is: ", dt_ex_2);
     test_dt(dt_ex_2);
+
     char* dt_ex_3 = "2021-08-3212:45:01Z"; //STRLEN_MISMATCH 19 instead of 20 chars (T)
+    io::printf("test_3 datetime::parseDateTime(char*) of %s is: ", dt_ex_3);
     test_dt(dt_ex_3);
-    char* dt_ex_4 = "2021-08-31T12:45:01+04:05:56"; //
+
+    char* dt_ex_4 = "2021-08-31T12:37:01+04:05:56"; //OK
+    io::printf("test_4 datetime::parseDateTime(char*) of %s is: ", dt_ex_4);
     test_dt(dt_ex_4);
 
 
