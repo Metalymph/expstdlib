@@ -21,6 +21,8 @@ fn void test_dt(char* dt_ex) {
         io::printf("\nComponents are:\nDate -> yyyy: %hd, mm: %hd, dd: %hd\n", dt.date.y, dt.date.m, dt.date.d);
         io::printf("Time -> hh: %hd, mm: %hd, ss: %hd\n", dt.time.h, dt.time.m, dt.time.s);
         io::printf("TimeZone -> hh: %hd, mm: %hd, ss: %hd, sign: %c\n", dt.time_zone.h, dt.time_zone.m, dt.time_zone.s, dt.time_zone.sign);
+
+        io::printf("test time.toStr(): %s\n", dt.time.toStr());
     }
 }
 

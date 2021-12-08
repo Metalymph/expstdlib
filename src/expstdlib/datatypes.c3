@@ -1,6 +1,7 @@
 module datetime;
 
 import libc;
+import std::io;
 
 enum DateUnit {
     YEAR,
@@ -86,14 +87,14 @@ fn bool Date.isLeapYear(Date* date) {
     return false;
 }
 
-fn void! Date.addTime(Date* date, DateUnit date_unit, uint amount) {
+/*fn void! Date.addTime(Date* date, DateUnit date_unit, uint amount) {
     switch (date_unit) {
-        YEAR:
+        case YEAR:
             if (amount + date.y > 9999 ) {
                 return DateError.YEAR_OUT_OF_BOUND;
             }
             date.y += amount;
-        MONTH:
+        case MONTH:
             uint years = (amount + date.m) / 12;
             uint rest_mounths = (amount - date.m) % 12;
             if ((years  + date.y)  > 9999) {
@@ -107,10 +108,10 @@ fn void! Date.addTime(Date* date, DateUnit date_unit, uint amount) {
 
             date.m += rest_mounths;
             date.y += years;
-        DAY:
+        case DAY:
 
     }
-}
+}*/
 
 struct Time {
     ushort h;
@@ -119,9 +120,12 @@ struct Time {
 }
 
 fn char* Time.toStr(Time* t) {
-    char[] time_to_str;
-    libc::sprintf(time_to_str, "%hu:%hu:%hu", t.h, t.m, t.s);
-    return time_to_str;
+    char[8] time_to_str;
+    char hour_zero = (t.h < 10) ? '0' : hour_zero;
+    char min_zero = (t.m < 10) ? '0' : min_zero;
+    char sec_zero = (t.s < 10) ? '0' : sec_zero;
+    libc::sprintf(time_to_str[..], "%c%hd:%c%hd:%c%hd", hour_zero, t.h, min_zero, t.m, sec_zero, t.s);
+    return (char*)(time_to_str[..]);
 }
 
 struct TimeZone {
