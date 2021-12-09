@@ -4,16 +4,16 @@ import strings;
 import std::io;
 import datetime;
 
-fn void test_date_addTime(Date* dt, DateUnit unit, uint amount) {
-    if (catch err = dt.addTime(unit, amount)) {
+fn void test_date_add(Date* dt, DateUnit unit, uint amount) {
+    if (catch err = dt.add(unit, amount)) {
         case DateError.YEAR_OUT_OF_BOUND:
-                io::println("test addTime: ERR year > 9999");
+                io::println("test add: ERR year > 9999");
         case DateError.MONTH_OUT_OF_BOUND:
-                io::println("test addTime: ERR too many months given (year > 9999)");
+                io::println("test add: ERR too many months given (year > 9999)");
         default:
-                io::println("test addTime: ERR day number not allowed in current month.");
+                io::println("test add: ERR day number not allowed in current month.");
     } else {
-        io::println("test addTime: OK");
+        io::println("test add on date: OK");
         io::printf("\tAfter date manipulation components are: Date -> yyyy: %hd, mm: %hd, dd: %hd\n", dt.y, dt.m, dt.d);
     }
 }
@@ -36,9 +36,9 @@ fn void test_dt(char* dt_ex) {
         io::printf("\tTime -> hh: %hd, mm: %hd, ss: %hd\n", dt.time.h, dt.time.m, dt.time.s);
         io::printf("\tTimeZone -> hh: %hd, mm: %hd, ss: %hd, sign: %c\n", dt.time_zone.h, dt.time_zone.m, dt.time_zone.s, dt.time_zone.sign);
     
-        test_date_addTime(&dt.date, DateUnit.YEAR, 7989);
-        test_date_addTime(&dt.date, DateUnit.DAY, 26);
-        test_date_addTime(&dt.date, DateUnit.MONTH, 6);
+        test_date_add(&dt.date, DateUnit.YEAR, 7989);
+        test_date_add(&dt.date, DateUnit.DAY, 26);
+        test_date_add(&dt.date, DateUnit.MONTH, 6);
     }
 }
 

@@ -87,7 +87,7 @@ fn bool Date.isLeapYear(Date* date) {
     return false;
 }
 
-fn void! Date.addTime(Date* date, DateUnit date_unit, uint amount) {
+fn void! Date.add(Date* date, DateUnit date_unit, uint amount) {
     switch (date_unit) {
         case YEAR:
             if (amount + date.y > 9999 ) {

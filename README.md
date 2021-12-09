@@ -23,12 +23,12 @@ if (catch err = dt) {
 ## Date and Time structs
 
 You can also use `parseDate("yyyy-mm-dd")` or `parseTime("hh:mm:ss")` to obtain a `Date` or a `Time` struct.
-You can add or substract time to `Date` or `Time` with `addTime(..., ...)` method available on both. For example:
+You can add or substract time to `Date` or `Time` with `add(..., ...)` and `sub`methods available on both. For example:
 
 ```
 import datetime;
 
 Date date = datetime::parseData("yyyy-mm-dd")!!;
-date.addTime(DateUnit.MONTH, 123)!! //adds 123 months to the given data parsed
+date.add(DateUnit.MONTH, 123)!! //adds 123 months to the given data parsed
 
 ```
