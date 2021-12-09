@@ -4,25 +4,41 @@ import strings;
 import std::io;
 import datetime;
 
+fn void test_date_addTime(Date* date, DateUnit unit, uint amount) {
+    if (catch err = date.addTime(unit, amount)) {
+        case DateError.YEAR_OUT_OF_BOUND:
+                io::println("test addTime: ERR year > 9999");
+        case DateError.MONTH_OUT_OF_BOUND:
+                io::println("test addTime: ERR too many months given (year > 9999)");
+        default:
+                io::println("test addTime: ERR day number not allowed in current month.");
+    } else {
+        io::println("test addTime: OK");
+    }
+}
+
 fn void test_dt(char* dt_ex) {
     DateTime! dt = datetime::parseDateTime(dt_ex);
     if (catch err = dt) {
         case ParseNumError.NOT_A_NUM:
-            io::println("ERR: Not a num");
+            io::println("\n\tERR: Not a num");
         case DateTimeError.UNEXPECTED_CHAR:
-            io::println("ERR: Char Error");
+            io::println("\n\tERR: Char Error");
         default:
-            io::println("ERR: Str Len Mismatch");
+            io::println("\n\tERR: Str Len Mismatch");
     } else {
         io::println("OK");
         //io::printf("datetime.date = %s", dt.date.toStr());
         //io::printf("datetime.time = %s", dt.time.toStr());
 
-        io::printf("\nComponents are:\nDate -> yyyy: %hd, mm: %hd, dd: %hd\n", dt.date.y, dt.date.m, dt.date.d);
-        io::printf("Time -> hh: %hd, mm: %hd, ss: %hd\n", dt.time.h, dt.time.m, dt.time.s);
-        io::printf("TimeZone -> hh: %hd, mm: %hd, ss: %hd, sign: %c\n", dt.time_zone.h, dt.time_zone.m, dt.time_zone.s, dt.time_zone.sign);
-
-        io::printf("test time.toStr(): %s\n", dt.time.toStr());
+        io::printf("\tComponents are: Date -> yyyy: %hd, mm: %hd, dd: %hd\n", dt.date.y, dt.date.m, dt.date.d);
+        io::printf("\tTime -> hh: %hd, mm: %hd, ss: %hd\n", dt.time.h, dt.time.m, dt.time.s);
+        io::printf("\tTimeZone -> hh: %hd, mm: %hd, ss: %hd, sign: %c\n", dt.time_zone.h, dt.time_zone.m, dt.time_zone.s, dt.time_zone.sign);
+    
+        test_date_addTime(&dt.date, DateUnit.YEAR, 7989);
+        test_date_addTime(&dt.date, DateUnit.DAY, 26);
+        test_date_addTime(&dt.date, DateUnit.MONTH, 6);
+        io::printf("\tAfter date manipulation components are: Date -> yyyy: %hd, mm: %hd, dd: %hd\n\n", dt.date.y, dt.date.m, dt.date.d);
     }
 }
 
@@ -42,19 +58,19 @@ fn int main(int argc, char** argv)
     //io::printf("%s\n", (strings::len(dt_ex_1) == 20) ? "OK" : "ERR");
 
     //TEST datetime::parseDateTime()
-    io::printf("test_1 datetime::parseDateTime(char*) of %s is: ", dt_ex_1);
+    io::printf("test_1 datetime::parseDateTime(char*) of %s is:\n\t", dt_ex_1);
     test_dt(dt_ex_1); //OK
 
     char* dt_ex_2 = "2021-08-32T12:45:01Z"; //32 of august CHAR_ERROR
-    io::printf("test_2 datetime::parseDateTime(char*) of %s is: ", dt_ex_2);
+    io::printf("test_2 datetime::parseDateTime(char*) of %s is:\n\t", dt_ex_2);
     test_dt(dt_ex_2);
 
     char* dt_ex_3 = "2021-08-3212:45:01Z"; //STRLEN_MISMATCH 19 instead of 20 chars (T)
-    io::printf("test_3 datetime::parseDateTime(char*) of %s is: ", dt_ex_3);
+    io::printf("test_3 datetime::parseDateTime(char*) of %s is:\n\t", dt_ex_3);
     test_dt(dt_ex_3);
 
     char* dt_ex_4 = "2021-08-31T12:37:01+04:05:56"; //OK
-    io::printf("test_4 datetime::parseDateTime(char*) of %s is: ", dt_ex_4);
+    io::printf("test_4 datetime::parseDateTime(char*) of %s is:\n\t", dt_ex_4);
     test_dt(dt_ex_4);
 
 
