@@ -134,6 +134,7 @@ private fn Date! parseDate(char* date_str) {
                         case 11: nextcase 4;
                         case 12: nextcase 1;
                     }
+                    date.d += ch_val;
                 } else {
                     switch (date.m) {
                         case 1:
