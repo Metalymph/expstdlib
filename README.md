@@ -25,7 +25,7 @@ fn int main(int argc, char** argv){
 ## Date and Time structs
 
 You can also use `parseDate("yyyy-mm-dd")` or `parseTime("hh:mm:ss")` to obtain a `Date` or a `Time` struct.
-You can add or subtract time to `Date` or `Time` with `add(..., ...)` and `sub`methods available on both. For example:
+You can add or subtract time to `Date` or `Time` with `add(..., ...)` and `sub`methods available on both. For example, accepting possible code panic:
 
 ```
 import datetime;
@@ -34,7 +34,7 @@ fn int main(int argc, char** argv){
     Date date = datetime::parseData("2021-02-01")!!;
     date.add(DateUnit.MONTH, 123)!! //adds 123 months to the given data parsed
 
-    Time time = datetime::parseTime("04:23:59");
-    time.add()
+    Time time = datetime::parseTime("04:23:59")!!;
+    time.add(TimeUnit.SEC, 4500)!!;
 }
 ```
