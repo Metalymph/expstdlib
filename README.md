@@ -22,7 +22,7 @@ fn int main(int argc, char** argv){
 
 ```
 
-## Date and Time structs
+## Date, Time, TimeZone
 
 You can also use `parseDate("yyyy-mm-dd")` or `parseTime("hh:mm:ss")` to obtain a `Date` or a `Time` struct.
 You can add or subtract time to `Date` or `Time` with `add(..., ...)` and `sub`methods available on both. For example, accepting possible code panic:
@@ -38,3 +38,7 @@ fn int main(int argc, char** argv){
     time.add(TimeUnit.SEC, 4500)!!;
 }
 ```
+
+A `TimeZone` is a type composed by a `Time` and a symbol for positive-negative or zulu TZ.
+
+

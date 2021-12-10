@@ -1,8 +1,5 @@
 module datetime;
 
-//import libc;
-//import std::io;
-
 enum DateUnit {
     YEAR,
     MONTH,
@@ -68,11 +65,21 @@ errtype ParseNumError {
     NOT_A_NUM
 }
 
+/**
+    Date
+**/
+
 struct Date {
     uint y;
     uint m;
     uint d;
 }
+
+fn void Date.reset(Date* date) {
+    date.y = 0;
+    date.m = 0;
+    date.d = 0;
+} 
 
 fn bool Date.isLeapYear(Date* date) {
     if (date.y % 4 == 0) {
@@ -174,10 +181,24 @@ fn void! Date.add(Date* date, DateUnit date_unit, uint amount) {
     }
 }
 
+/**
+    struct Time
+**/
+
 struct Time {
     ushort h;
     ushort m;
     ushort s;
+}
+
+fn void Time.reset(Time* time) {
+    time.h = 0;
+    time.m = 0;
+    time.s = 0;
+}
+
+fn void! add(Time* time, TimeUnit time_unit, uint amount) {
+
 }
 
 /*fn char* Time.toStr(Time* t, char[] time_str) {
@@ -188,13 +209,32 @@ struct Time {
     return time_str;
 }*/
 
+/**
+    struct TimeZone
+**/
+
 struct TimeZone {
     inline Time time;
     char sign;
 }
 
+fn void TimeZone.reset(TimeZone* tz) {
+    tz.time.reset();
+    tz.sign = 'Z';
+}
+
+/**
+    struct DateTime
+**/
+
 struct DateTime {
     Date date;
     Time time;
     TimeZone time_zone;
+}
+
+fn void DateTime.reset(DateTime* dt) {
+    dt.time.reset();
+    dt.date.reset();
+    dt.time_zone.reset();
 }
