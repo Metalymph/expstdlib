@@ -25,7 +25,7 @@ fn int main(int argc, char** argv){
 ## Date, Time, TimeZone
 
 You can also use `parseDate("yyyy-mm-dd")` or `parseTime("hh:mm:ss")` to obtain a `Date` or a `Time` struct.
-You can add or subtract time to `Date` or `Time` with `add(..., ...)` and `sub`methods available on both. For example, accepting possible code panic:
+You can add or subtract time to `Date` or `Time` with `add(DateUnit, amount)` and `sub` methods available on both. For example, accepting possible code panic:
 
 ```
 import datetime;
@@ -58,5 +58,7 @@ fn int main(int argc, char** argv){
     }
 }
 ```
+
+Each type can be set to zero value, calling `reset()` method.
 
 
