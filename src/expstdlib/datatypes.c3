@@ -94,6 +94,9 @@ fn bool Date.isLeapYear(Date* date) {
     return false;
 }
 
+/**
+* @param date_unit : unit to add
+**/
 fn void! Date.add(Date* date, DateUnit date_unit, uint amount) {
     switch (date_unit) {
         case YEAR:
@@ -197,9 +200,24 @@ fn void Time.reset(Time* time) {
     time.s = 0;
 }
 
-fn void! add(Time* time, TimeUnit time_unit, uint amount) {
+/**
+* @param time_unit : unit to add
+* @return number of days generated
+**/
+/*fn uint! add(Time* time, TimeUnit time_unit, uint amount) {
+    switch (time_unit) {
+        case HOUR:
 
-}
+        case MIN:
+        case SEC:
+        case MILLISEC:
+            uint amount /= 1000;
+            nextcase SEC;
+        case NANOSEC:
+            uint amount /= 1_000_000_000;
+            nextcase SEC;
+    }
+}*/
 
 /*fn char* Time.toStr(Time* t, char[] time_str) {
     char hour_zero = (t.h < 10) ? '0' : '\0';

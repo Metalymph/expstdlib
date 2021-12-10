@@ -41,4 +41,22 @@ fn int main(int argc, char** argv){
 
 A `TimeZone` is a type composed by a `Time` and a symbol for positive-negative or zulu TZ.
 
+```
+import datetime;
+
+fn int main(int argc, char** argv){
+    DateTime! dt = datetime::parseDateTime("2021-05-26T05:45:23+02:00:00");
+    if (catch err = dt) {
+        case ParseNumError.NOT_A_NUM:
+            io::println("\n\tERR: Not a num");
+        case DateTimeError.UNEXPECTED_CHAR:
+            io::println("\n\tERR: Char Error");
+        default:
+            io::println("\n\tERR: Str Len Mismatch");
+    } else {
+        dt.time_zone = TimeZone{ 5, 0, 0, '+' };
+    }
+}
+```
+
 
