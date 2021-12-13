@@ -50,7 +50,7 @@ fn void DateTime.reset(DateTime* dt) {
 }
 
 private fn char! verifyChar(char ch, CharType ctype, ushort pos) {
-    char[] err_message;
+    char* err_message;
     ushort ch_val = (ushort)(ch);
     switch (ctype) {
         case NO_ZERO_NUM:
@@ -77,7 +77,7 @@ private fn char! verifyChar(char ch, CharType ctype, ushort pos) {
             if ((ch == 'Z') || (ch == '-') || (ch == '+')) {
                 return ch;
             }
-            err_message = (pos < 8) ? "'-\'" : "\'Z\' or \'-\' or \'+\'";
+            err_message = (pos < 8) ? "\'-\'" : "\'Z\' or \'-\' or \'+\'";
         case COLON:
             if (ch == ':') {
                 return ch;
@@ -297,12 +297,12 @@ fn void! DateTime.addTime(DateTime* dt, TimeUnit t_unit, uint amount) {
     dt.date.add(DateUnit.DAY, days_ahead)?;
 }
 
-fn DateTime now() {
+/*fn DateTime now() {
     time_t rawtime;
     struct tm * timeinfo;
 
     time ( &rawtime );
     timeinfo = localtime ( &rawtime );
     printf("Current local time and date: %s", asctime(timeinfo) );
-}
+}*/
 
