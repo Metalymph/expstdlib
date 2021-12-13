@@ -4,12 +4,49 @@ import strings;
 import std::io;
 import libc;
 
-fn ushort! atoi(char ch) {
-    ushort ch_val = (ushort)(ch);
-    if (ch_val > 47 && ch_val < 58) {
-        return ch_val - 48;
-    }
-    return ParseNumError.NOT_A_NUM!;
+enum CharType {
+    NO_ZERO_NUM,
+    NUM,
+    MINUS,
+    TIME,
+    TIME_ZONE_SIGN,
+    COLON
+}
+
+errtype DTParseError {
+    UNEXPECTED_CHAR,
+    STR_LEN_MISMATCH,
+    NOT_A_NUM
+}
+
+/**
+    struct TimeZone
+**/
+
+struct TimeZone {
+    inline Time time;
+    char sign;
+}
+
+fn void TimeZone.reset(TimeZone* tz) {
+    tz.time.reset();
+    tz.sign = 'Z';
+}
+
+/**
+    struct DateTime
+**/
+
+struct DateTime {
+    Date date;
+    Time time;
+    TimeZone time_zone;
+}
+
+fn void DateTime.reset(DateTime* dt) {
+    dt.time.reset();
+    dt.date.reset();
+    dt.time_zone.reset();
 }
 
 private fn char! verifyChar(char ch, CharType ctype, ushort pos) {
@@ -48,7 +85,7 @@ private fn char! verifyChar(char ch, CharType ctype, ushort pos) {
             err_message = "\':\'";
     }
     io::printf("Error: char \'%c\' found, expected %s instead at index %hd\n", ch, err_message, pos);
-    return DateTimeError.UNEXPECTED_CHAR!; 
+    return DTParseError.UNEXPECTED_CHAR!; 
 }
 
 private fn Date! parseDate(char* date_str) {
@@ -81,7 +118,7 @@ private fn Date! parseDate(char* date_str) {
                     continue;
                 } else { 
                     io::printf("Error: char \'%c\' found, expected \'-\' instead.\n", ch);
-                    return DateTimeError.UNEXPECTED_CHAR!; 
+                    return DTParseError.UNEXPECTED_CHAR!; 
                 }
             case 6:
                 if (date.m == 0) {
@@ -93,7 +130,7 @@ private fn Date! parseDate(char* date_str) {
                         date.m += ch_val;
                     } else { 
                         io::printf("Error: char \'%c\' found, expected 1 or 2 instead at index %hd.\n", ch, i);
-                        return DateTimeError.UNEXPECTED_CHAR!; 
+                        return DTParseError.UNEXPECTED_CHAR!; 
                     }
                 }
             case 7:
@@ -103,12 +140,12 @@ private fn Date! parseDate(char* date_str) {
                 if ((ch_val >= 0) && (ch_val <= 3)) {
                     if (date.m == 2 && ch_val == 3) {
                         io::printf("Error: char \'%c\' found, expected in 0..2 instead at index %hd due to month %hu given.\n", ch, i, date.m);
-                        return DateTimeError.UNEXPECTED_CHAR!;
+                        return DTParseError.UNEXPECTED_CHAR!;
                     }
                     date.d = ch_val * 10;
                 } else {
                     io::printf("Error: char \'%c\' found, expected in 0..3 instead at index %hd.\n", ch, i);
-                    return DateTimeError.UNEXPECTED_CHAR!; 
+                    return DTParseError.UNEXPECTED_CHAR!; 
                 }
             case 9:
                 ch_val = atoi(ch)?;
@@ -117,14 +154,14 @@ private fn Date! parseDate(char* date_str) {
                         case 1:
                             if (ch_val > 1) {
                                 io::printf("Error: char \'%c\' found, expected 0 or 1 instead at index %hd", ch, i);
-                                return DateTimeError.UNEXPECTED_CHAR!;
+                                return DTParseError.UNEXPECTED_CHAR!;
                             }
-                        //case 2: return DateTimeError.UNEXPECTED_CHAR;!
+                        //case 2: return DTParseError.UNEXPECTED_CHAR;!
                         case 3: nextcase 1;
                         case 4: 
                             if (ch_val > 0) {
                                 io::printf("Error: char \'%c\' found, expected 0 instead at index %hd due to month %hu given", ch, i, date.m);
-                                return DateTimeError.UNEXPECTED_CHAR!; 
+                                return DTParseError.UNEXPECTED_CHAR!; 
                             }
                         case 5: nextcase 1;
                         case 6: nextcase 4;
@@ -146,7 +183,7 @@ private fn Date! parseDate(char* date_str) {
                             } else {
                                 if (ch > 8) {
                                     io::printf("Error: char \'%c\' found, expected in 0..8 instead at index %hd due to month %hu given", ch, i, date.m);
-                                    return DateTimeError.UNEXPECTED_CHAR!;
+                                    return DTParseError.UNEXPECTED_CHAR!;
                                 }
                                 date.d += ch_val;
                             }
@@ -175,7 +212,7 @@ private fn Time! parseTime(char* time_str) {
                 ch_val = atoi(ch)?;
                 if (ch_val > 3) {
                     io::printf("Error: char \'%c\' found, expected in 0..2 instead at index %hd", ch, i);
-                    return DateTimeError.UNEXPECTED_CHAR!;
+                    return DTParseError.UNEXPECTED_CHAR!;
                 }
                 time.h = ch_val * 10;
             case 1:
@@ -184,7 +221,7 @@ private fn Time! parseTime(char* time_str) {
                     verifyChar(ch, CharType.NUM, i)?;
                 } else if (ch_val > 3) {
                     io::printf("Error: char \'%c\' found, expected in 0..3 instead at index %hd", ch, i);
-                    return DateTimeError.UNEXPECTED_CHAR!;
+                    return DTParseError.UNEXPECTED_CHAR!;
                 }
                 time.h += ch_val;
             case 2:
@@ -193,7 +230,7 @@ private fn Time! parseTime(char* time_str) {
                 ch_val = atoi(ch)?;
                 if (ch_val > 5) {
                     io::printf("Error: char \'%c\' found, expected in 0..5 instead at index %hd", ch, i);
-                    return DateTimeError.UNEXPECTED_CHAR!;
+                    return DTParseError.UNEXPECTED_CHAR!;
                 }
                 time.m = ch_val * 10;
             case 4:
@@ -205,7 +242,7 @@ private fn Time! parseTime(char* time_str) {
                 ch_val = atoi(ch)?;
                 if (ch_val > 5) {
                     io::printf("Error: char \'%c\' found, expected in 0..5 instead at index %hd", ch, i);
-                    return DateTimeError.UNEXPECTED_CHAR!;
+                    return DTParseError.UNEXPECTED_CHAR!;
                 }
                 time.s = ch_val * 10;
             case 7:
@@ -217,14 +254,12 @@ private fn Time! parseTime(char* time_str) {
     return time;
 }
 
-//0 .. 9 is the date index range
-//11 .. 18 is the time index range
 fn DateTime! parseDateTime(char* datetime_str) {
     //usize strlen = libc::strlen(datetime_str);
     uint strlen = strings::len(datetime_str);
     if (strlen < 20) {
         io::printf("Error: string given has not the minimum lenght of 20 chars.");
-        return DateTimeError.STR_LEN_MISMATCH!;
+        return DTParseError.STR_LEN_MISMATCH!;
     }
 
     verifyChar(datetime_str[10], CharType.TIME, 10)?;
@@ -239,7 +274,7 @@ fn DateTime! parseDateTime(char* datetime_str) {
         case '+':
             if (strlen != 28) {
                 io::printf("Error: string given has not the lenght of 28 chars.");
-                return DateTimeError.STR_LEN_MISMATCH!; 
+                return DTParseError.STR_LEN_MISMATCH!; 
             }
             datetime.time_zone.time = parseTime(datetime_str[20..27])?;
         case '-':
@@ -247,10 +282,18 @@ fn DateTime! parseDateTime(char* datetime_str) {
     }
 
     datetime.date = parseDate(datetime_str)?;
-    //io::println("Given date correctly parsed");
     datetime.time = parseTime(datetime_str[11..18])?;
-    //io::println("Given time correctly parsed");
 
     return datetime;
+}
+
+fn void! DateTime.addDate(DateTime* dt, DateUnit d_unit, uint amount) {
+    dt.date.add(d_unit, amount)?;
+}
+
+fn void! DateTime.addTime(DateTime* dt, TimeUnit t_unit, uint amount) {
+    uint days_ahead = dt.time.add(t_unit, amount);
+    if(days_ahead == 0) { return; }
+    dt.date.add(DateUnit.DAY, days_ahead)?;
 }
 

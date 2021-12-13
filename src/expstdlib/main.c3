@@ -21,16 +21,16 @@ fn void test_date_add(Date* dt, DateUnit unit, uint amount) {
 fn void test_dt(char* dt_ex) {
     DateTime! dt = datetime::parseDateTime(dt_ex);
     if (catch err = dt) {
-        case ParseNumError.NOT_A_NUM:
+        case DTParseError.NOT_A_NUM:
             io::println("\n\tERR: Not a num");
-        case DateTimeError.UNEXPECTED_CHAR:
+        case DTParseError.UNEXPECTED_CHAR:
             io::println("\n\tERR: Char Error");
         default:
             io::println("\n\tERR: Str Len Mismatch");
     } else {
         io::println("OK");
-        //io::printf("datetime.date = %s", dt.date.toStr());
-        //io::printf("datetime.time = %s", dt.time.toStr());
+        //io::printf("datetime.date = %s\n", dt.date.toStr());
+        //io::printf("datetime.time = %s\n", dt.time.toStr());
 
         io::printf("\tComponents are: Date -> yyyy: %hd, mm: %hd, dd: %hd\n", dt.date.y, dt.date.m, dt.date.d);
         io::printf("\tTime -> hh: %hd, mm: %hd, ss: %hd\n", dt.time.h, dt.time.m, dt.time.s);
