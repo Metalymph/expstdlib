@@ -297,3 +297,12 @@ fn void! DateTime.addTime(DateTime* dt, TimeUnit t_unit, uint amount) {
     dt.date.add(DateUnit.DAY, days_ahead)?;
 }
 
+fn DateTime now() {
+    time_t rawtime;
+    struct tm * timeinfo;
+
+    time ( &rawtime );
+    timeinfo = localtime ( &rawtime );
+    printf("Current local time and date: %s", asctime(timeinfo) );
+}
+
